@@ -1,0 +1,52 @@
+h1 {
+    text-transform: uppercase;
+    color: white;
+	text-align: center;
+	font-family: "Arial Black", Times, serif;
+}
+
+body {
+    background-color: black;
+}
+
+table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 70%;
+	margin-left:15%; 
+    margin-right:15%;
+}
+
+table td, #tabla th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+table tr:nth-child(odd){background-color: white;}
+table tr:hover {background-color: #ddd;}
+
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+div {
+    overflow: auto;
+    height: 200px;
+    width: 100%;
+}
+
+#imagenLogo{
+	width: 25%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}

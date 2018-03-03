@@ -7,11 +7,15 @@
 #define DHTTYPE DHT11
 Adafruit_BMP085 bmp; 
 DHT dht(DHTPIN, DHTTYPE);
-
+int pin_led = D5;
 #define FIREBASE_HOST "fire1-f885b.firebaseio.com"
 #define FIREBASE_AUTH "dYXj75tnbTg18en30DXzZXxC5R0tqkt8PXmgZqGh"
-#define WIFI_SSID "leonleon"
-#define WIFI_PASSWORD "bbbbbbbb"
+#define WIFI_SSID "XPP"
+#define WIFI_PASSWORD "11111111"
+
+//#define WIFI_SSID "TURBONETT"
+//#define WIFI_PASSWORD "F4A589C72E"
+
 //****************************** luminosidad
 const long A = 1000;     //Resistencia en oscuridad en KΩ
 const int B = 150;        //Resistencia a la luz (10 Lux) en KΩ
@@ -25,7 +29,8 @@ int ilum3;
 
 void setup() {
    
-  
+  pinMode(pin_led, OUTPUT);
+     digitalWrite(pin_led, LOW); 
   Serial.begin(9600);
   dht.begin();
   // connect to wifi.
@@ -35,17 +40,20 @@ void setup() {
     Serial.print(".");
     delay(500);
   }
+  digitalWrite(pin_led, HIGH); 
   Serial.println();
   Serial.print("connected: ");
   Serial.println(WiFi.localIP());
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   /***************************************************************************************** LECTURA DE TEMPERATURA */
+
 Wire.begin(2, 0);   // SCL D3, SDA D4
 Wire.setClock(400000); 
 if (!bmp.begin()) {
   Serial.println("Error en el sensor");
   while (1) {}
 }
+
   /**************************************************************************************************/
 
 }
@@ -54,15 +62,16 @@ if (!bmp.begin()) {
 void loop() {
   //********************************************************************** PRESION 
 
-  int pressure = bmp.readPressure(); 
+  int pressure = bmp.readPressure()/100; 
   int temperature = bmp.readTemperature();
      Serial.print(" %\n");
   Serial.print("Temperatura: ");
   Serial.println(temperature);
   Serial.print("Presentacion: ");
-  Serial.println(pressure/100);
+  Serial.println(pressure);
        Serial.print(" %\n");
-  delay(1000);
+ // delay(1000);
+  
   //********************************************************************** HUMEDAD, TEMPERATURA
 
   float h = dht.readHumidity();
@@ -108,18 +117,18 @@ if( V!= 0) {
  }
 }
     
-      delay(1000);
+  //    delay(1000);
 
-      
  //********************************************************************** MANDAR A FIREBASE
 
       StaticJsonBuffer<200> jsonBuffer;
         JsonObject& root = jsonBuffer.createObject();
-        root["temperature"] = temperature;
+        root["temperature1"] = temperature;
+        root["temperature2"] = f;
         root["pressure"] = pressure;
         root["humidity"] = h;
         root["iluminacion"] = ilum3;
-            
+        
         // append a new value to /logDHT
         String name = Firebase.push("/estacion", root);
         // handle error
@@ -130,30 +139,6 @@ if( V!= 0) {
         }
         delay(1000);
 
-
-
-/*  Firebase.setString("message", "hello world");
-  // handle error
-  if (Firebase.failed()) {
-      Serial.print("setting /message failed:");
-      Serial.println(Firebase.error());  
-      return;
-  }
-  delay(1000);
-  */
-/*
-  // append a new value to /logs
-  String name = Firebase.pushInt("logs", n++);
-  // handle error
-  if (Firebase.failed()) {
-      Serial.print("pushing /logs failed:");
-      Serial.println(Firebase.error());  
-      return;
-  }
-  Serial.print("pushed: /logs/");
-  Serial.println(name);
-  delay(1000);
-  */
 }
 
 

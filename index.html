@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf8">
+		<link rel="stylesheet" type="text/css" href="estilo.css">
+		
+		<title>
+			WIFI-TS
+		</title>
+		
+	</head>
+	
+	<body>
+		
+		<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+		<script>
+			// Initialize Firebase
+			var config = {
+					apiKey: "AIzaSyCa9QGHqMYvUE18JslihpUb8hM1KDggslY",
+					authDomain: "fire1-f885b.firebaseapp.com",
+					databaseURL: "https://fire1-f885b.firebaseio.com",
+					projectId: "fire1-f885b",
+					storageBucket: "fire1-f885b.appspot.com",
+					messagingSenderId: "830509483188"
+			};
+			
+			firebase.initializeApp(config);
+			database = firebase.database();
+			
+			var ref = database.ref('estacion');
+			ref.on('value', obtenerDato, errorDato);
+			
+			
+			function obtenerDato(data)
+			{
+				var datos = data.val();
+				var registros = Object.keys(datos);
+				console.log(registros);
+				
+				var ultimaPosicion = registros.length -1;
+				var ultimaLlave = registros[ultimaPosicion];
+
+
+				var coU = datos[ultimaLlave].CO;
+				var humidityU = datos[ultimaLlave].humidity;
+				var iluminacionU = datos[ultimaLlave].iluminacion;
+				var pressureU = datos[ultimaLlave].pressure;
+				var temperature1U = datos[ultimaLlave].temperature1;
+				var temperature2U = datos[ultimaLlave].temperature2;
+				
+				//Tabla 1--------------------------------------------
+				//---------------------------------------------------
+
+				var tabla1 = document.getElementById('tabla1');
+				tabla1.innerHTML = "";
+
+
+				var encabezado1 = tabla1.insertRow(0);
+
+				var titu0 = encabezado1.insertCell(0);
+				var titu1 = encabezado1.insertCell(1);
+				var titu2 = encabezado1.insertCell(2);
+				var titu3 = encabezado1.insertCell(3);
+				var titu4 = encabezado1.insertCell(4);
+				var titu5 = encabezado1.insertCell(5);
+				var titu6 = encabezado1.insertCell(6);
+
+				titu0.innerHTML = "No";
+				titu1.innerHTML = "CO";
+				titu2.innerHTML = "Humedad";
+				titu3.innerHTML = "Iluminacion";
+				titu4.innerHTML = "Presion";
+				titu5.innerHTML = "Temperatura F";
+				titu6.innerHTML = "Temperatura C";
+
+				var valores = tabla1.insertRow(1);
+
+				var val0 = valores.insertCell(0);
+				var val1 = valores.insertCell(1);
+				var val2 = valores.insertCell(2);
+				var val3 = valores.insertCell(3);
+				var val4 = valores.insertCell(4);
+				var val5 = valores.insertCell(5);
+				var val6 = valores.insertCell(6);
+
+				val0.innerHTML = ultimaPosicion + 1;
+				val1.innerHTML  = coU;
+				val2.innerHTML  = humidityU;
+				val3.innerHTML  = iluminacionU;
+				val4.innerHTML  = pressureU;
+				val5.innerHTML  = temperature1U;
+				val6.innerHTML = temperature2U;
+				
+
+				//Tabla 2--------------------------------------------
+				//---------------------------------------------------
+
+				var tabla2 = document.getElementById('tabla2');
+				tabla2.innerHTML = "";
+
+				var encabezado2 = tabla2.insertRow(0);
+
+				var titulo0 = encabezado2.insertCell(0);
+				var titulo1 = encabezado2.insertCell(1);
+				var titulo2 = encabezado2.insertCell(2);
+				var titulo3 = encabezado2.insertCell(3);
+				var titulo4 = encabezado2.insertCell(4);
+				var titulo5 = encabezado2.insertCell(5);
+				var titulo6 = encabezado2.insertCell(6);
+
+				titulo0.innerHTML = "No.";
+				titulo1.innerHTML = "CO";
+				titulo2.innerHTML = "Humedad";
+				titulo3.innerHTML = "Iluminacion";
+				titulo4.innerHTML = "Presion";
+				titulo5.innerHTML = "Temperatura F";
+				titulo6.innerHTML = "Temperatura C";
+
+				
+				var filas = 1;
+				
+				for(var i=0; i<registros.length; i++)
+				{
+					var k = registros[i];
+
+					var co = datos[k].CO;
+					var humidity = datos[k].humidity;
+					var iluminacion = datos[k].iluminacion;
+					var pressure = datos[k].pressure;
+					var temperature1 = datos[k].temperature1;
+					var temperature2 = datos[k].temperature2;
+
+					var fila = tabla2.insertRow(filas);
+
+					filas++;
+
+					var celda0 = fila.insertCell(0);
+					var celda1 = fila.insertCell(1);
+					var celda2 = fila.insertCell(2);
+					var celda3 = fila.insertCell(3);
+					var celda4 = fila.insertCell(4);
+					var celda5 = fila.insertCell(5);
+					var celda6 = fila.insertCell(6);
+
+					celda0.innerHTML  = i+1;
+					celda1.innerHTML  = co;
+					celda2.innerHTML  = humidity;
+					celda3.innerHTML  = iluminacion;
+					celda4.innerHTML  = pressure;
+					celda5.innerHTML  = temperature1;
+					celda6.innerHTML  = temperature2;
+				}
+			}
+			
+			function errorDato(err)
+			{
+				console.log('Error!');
+				console.log(err);
+			}
+			
+		</script>
+
+		<img id="imagenLogo" src="logo.png" class="center" >
+		
+		<h1>Ultimo Registro</h1>
+		<table id="tabla1"></table>
+		
+		<h1>Historial de Registros</h1>
+
+		<div>
+			<table id="tabla2"></table>
+		</div>
+		
+	</body>
+</html>
